@@ -1,106 +1,170 @@
-# SoC - Empty
+# BreathSense
 
-The Bluetooth SoC-Empty example is a project that you can use as a template for any standalone Bluetooth application.
+BreathSense is a Bluetooth Low Energy (BLE) firmware for the Silicon Labs
+**EFR32MG21** SoC. It acts as a BLE peripheral that reports **breath events**
+(Inhale / Exhale / Cough) to a connected client over a custom GATT service.
+Two on-board LEDs show the connection state, and a push-button is used to
+trigger a breath event.
 
-> Note: This example does not include Device Firmware Update (DFU) functionality by default. For details see the [Device Firmware Update](#device-firmware-update) section.
+The project is built on the Silicon Labs *Bluetooth – SoC Empty* example and
+runs on top of **FreeRTOS**.
 
-## Getting Started
+> Status: experimental. The breath events are currently generated on a button
+> press for demonstration/bring-up; the same code path is where a real
+> respiratory sensor would feed data into the BLE notifications.
 
-To learn the Bluetooth technology basics, see [UG103.14: Bluetooth LE Fundamentals](https://www.silabs.com/documents/public/user-guides/ug103-14-fundamentals-ble.pdf).
+---
 
-To get started with Silicon Labs Bluetooth and Simplicity Studio, see [QSG169: Bluetooth SDK v3.x Quick Start Guide](https://www.silabs.com/documents/public/quick-start-guides/qsg169-bluetooth-sdk-v3x-quick-start-guide.pdf).
+## Features
 
-The term SoC stands for "System on Chip", meaning that this is a standalone application that runs on the EFR32/BGM and does not require any external MCU or other active components to operate.
+- BLE peripheral that advertises as **`BreathSense-Vinh`** and is connectable.
+- Custom **BreathSense GATT service** with three characteristics:
+  - **Breath Event** – Read / Notify. Sends a short text label of each event
+    (e.g. `Inhale #12`).
+  - **Config** – Read / Write. Lets the client configure mode, threshold and
+    sample rate.
+  - **Device Status** – Read / Notify. Reports device state, battery %, error
+    code and a running event counter.
+- FreeRTOS task that wakes on a button interrupt and pushes a BLE notification.
+- Two status LEDs: one for *connected*, one for *disconnected*.
+- Automatically restarts advertising after a disconnection.
 
-As the name implies, the example is an (almost) empty template that has only the bare minimum to make a working Bluetooth application. This skeleton can be extended with the application logic.
+---
 
-The development of a Bluetooth applications consist of three main steps:
+## Hardware
 
-* Designing the GATT database
-* Responding to the events raised by the Bluetooth stack
-* Implementing additional application logic
+| Item        | Value                                   |
+|-------------|-----------------------------------------|
+| MCU / SoC   | `EFR32MG21A010F512IM32` (Arm Cortex-M33, 512 KB flash) |
+| Radio       | Bluetooth Low Energy                    |
+| SDK         | Silicon Labs Simplicity SDK `2025.12.3` |
+| RTOS        | FreeRTOS                                |
 
-These steps are covered in the following sections. To learn more about programming an SoC application, see [UG434: Silicon Labs Bluetooth ® C Application Developer's Guide for SDK v3.x](https://www.silabs.com/documents/public/user-guides/ug434-bluetooth-c-soc-dev-guide-sdk-v3x.pdf).
+### Pin assignment
 
-## Designing the GATT Database
+| Function                  | Instance    | GPIO          |
+|---------------------------|-------------|---------------|
+| Button (trigger event)    | `bt_01`     | **PD04**      |
+| LED – connected           | `led_CN`    | **PA00**      |
+| LED – disconnected        | `led_disCN` | **PA04**      |
 
-The SOC-empty example implements a basic GATT database. GATT definitions (services/characteristics) can be extended using the GATT Configurator, which can be found under Advanced Configurators in the Software Components tab of the Project Configurator. To open the Project Configurator, open the .slcp file of the project.
+> Pins are defined in `config/sl_simple_button_bt_01_config.h`,
+> `config/sl_simple_led_led_CN_config.h` and
+> `config/sl_simple_led_led_disCN_config.h`. Adjust them to match your board.
 
-![Opening GATT Configurator](image/readme_img1.png)
+---
 
-To learn how to use the GATT Configurator, see [UG438: GATT Configurator User’s Guide for Bluetooth SDK v3.x](https://www.silabs.com/documents/public/user-guides/ug438-gatt-configurator-users-guide-sdk-v3x.pdf).
+## BLE GATT service
 
-## Responding to Bluetooth Events
+**BreathSense Service** — UUID `7E92A001-1F7C-4B89-A2D5-6B8F1D3E4C00`
 
-A Bluetooth application is event driven. The Bluetooth stack generates events e.g., when a remote device connects or disconnects or when it writes a characteristic in the local GATT database. The application has to handle these events in the `sl_bt_on_event()` function. The prototype of this function is implemented in *app.c*. To handle more events, the switch-case statement of this function is to be extended. For the list of Bluetooth events, see the online [Bluetooth API Reference](https://docs.silabs.com/bluetooth/latest/).
+| Characteristic | UUID (128-bit)                          | Properties     | Payload |
+|----------------|-----------------------------------------|----------------|---------|
+| Breath Event   | `7E92A002-1F7C-4B89-A2D5-6B8F1D3E4C00`  | Read, Notify   | UTF-8 string, e.g. `"Inhale #12"` |
+| Config         | `7E92A003-1F7C-4B89-A2D5-6B8F1D3E4C00`  | Read, Write    | `breath_config_t` (4 bytes) |
+| Device Status  | `7E92A004-1F7C-4B89-A2D5-6B8F1D3E4C00`  | Read, Notify   | `device_status_t` (8 bytes) |
 
-## Implementing Application Logic
+The standard **Generic Access** (`0x1800`) and **Device Information**
+(`0x180A`) services are also present.
 
-Additional application logic has to be implemented in the `app_init()` and `app_process_action()` functions. Find the definitions of these functions in *app.c*. The `app_init()` function is called once when the device is booted, and `app_process_action()` is called repeatedly in a while(1) loop. For example, you can poll peripherals in this function. To save energy and to have this function called at specific intervals only, for example once every second, use the services of the [Sleeptimer](https://docs.silabs.com/gecko-platform/latest/service/api/group-sleeptimer). If you need a more sophisticated application, consider using RTOS (see [AN1260: Integrating v3.x Silicon Labs Bluetooth Applications with Real-Time Operating Systems](https://www.silabs.com/documents/public/application-notes/an1260-integrating-v3x-bluetooth-applications-with-rtos.pdf)).
+### Data formats
 
-## Features Already Added to the SOC-Empty Application
+```c
+// Breath event types (also encoded in the read snapshot)
+typedef enum {
+  BREATH_INHALE  = 0x01,
+  BREATH_EXHALE  = 0x02,
+  BREATH_COUGH   = 0x03,
+  BREATH_UNKNOWN = 0xFF
+} breath_event_type_t;
 
-The SOC-Empty application is ***almost*** empty. It implements a basic application to demonstrate how to handle events, how to use the GATT database, and how to add software components.
+// Config characteristic (writable by the client)
+typedef struct __attribute__((packed)) {
+  uint8_t mode;         // operating mode
+  uint8_t threshold;    // detection threshold
+  uint8_t sample_rate;  // sampling rate
+  uint8_t reserved;
+} breath_config_t;      // 4 bytes
 
-* A simple application is implemented in the event handler function that starts advertising on boot (and on connection_closed event). This makes it possible for remote devices to find the device and connect to it.
-* A simple GATT database is defined by adding Generic Access and Device Information services. This makes it possible for remote devices to read out some basic information such as the device name.
-* The OTA DFU software component is added, which extends both the event handlers (see *sl_ota_dfu.c*) and the GATT database (see *ota_dfu.xml*). This makes it possible to make Over-The-Air Device-Firmware-Upgrade without any additional application code.
+// Device Status characteristic (read + notify)
+typedef struct __attribute__((packed)) {
+  uint8_t  state;        // device state
+  uint8_t  battery_pct;  // battery level, 0-100 %
+  uint16_t error_code;   // last error code
+  uint32_t event_count;  // total breath events
+} device_status_t;       // 8 bytes
+```
 
-## Testing the SOC-Empty Application
+---
 
-As described above, an empty example does nothing except advertising and letting other devices connect and read its basic GATT database. To test this feature, do the following:
+## How it works
 
-1. Build and flash the SoC-Empty example to your device.
-2. In case of using DFU functionality, make sure a bootloader is installed. See the [Device Firmware Update](#device-firmware-update) section.
-3. Download the **Simplicity Connect** smartphone app, available on [iOS](https://apps.apple.com/us/app/simplicity-connect/id1030932759) and [Android](https://play.google.com/store/apps/details?id=com.siliconlabs.bledemo&hl=en&gl=US).
-4. Open the app and choose the [Scan].
-   ![Simplicity Connect start scanning](image/readme_img2.png)
-5. Now you should find your device advertising as "Empty Example". Tap **Connect**.
-   ![Scan results](image/readme_img3.png)
-6. The connection is opened, and the GATT database is automatically discovered. Find the device name characteristic under Generic Access service and try to read out the device name.
-   ![GATT database of the device](image/readme_img4.png)
+1. **Boot** — the firmware sets the device name, creates an advertising set
+   and starts connectable advertising (interval ≈ 100 ms). The
+   *disconnected* LED turns on.
+2. **Connection** — on connect, the *connected* LED turns on and the
+   *disconnected* LED turns off.
+3. **Subscription** — when the client enables notifications on the Breath
+   Event / Device Status characteristics, the device starts pushing data.
+4. **Button press (PD04)** — the button interrupt gives a FreeRTOS semaphore.
+   A dedicated `breath_task` wakes up and, if a client is connected and
+   subscribed, sends a notification: it cycles through Inhale → Exhale →
+   Cough, increments the event counter and updates the status.
+5. **Disconnection** — advertising restarts automatically and the
+   *disconnected* LED turns on again.
 
-## Device Firmware Update
+### Source layout
 
-This example project does not include Device Firmware Update (DFU) functionality by default, but it can be added easily.
-SoC applications can use one of Silicon Labs' Over-the-Air (OTA) DFU implementations. The table below summarizes the options:
+| File                                          | Purpose |
+|-----------------------------------------------|---------|
+| `app.c`                                       | BLE event handling, GATT read/write/notify, LED + button logic |
+| `app_freertos.c`                              | FreeRTOS task and semaphore for breath events |
+| `app.h`                                       | Application interface |
+| `main.c`                                      | Entry point / kernel start |
+| `config/btconf/gatt_configuration.btconf`     | GATT database definition |
+| `sl_gatt_service_device_information_override.c` | Device Information service overrides |
 
-|                           | In-place OTA DFU                 | Application OTA DFU                 |
-|---------------------------|----------------------------------|-------------------------------------|
-| **Component to add**      | In-place OTA DFU                 | Application OTA DFU                 |
-| **Compatible bootloader** | Bluetooth Apploader OTA DFU      | Bootloader - SoC Internal Storage (Series 2) <br> Bootloader - SoC Storage (Series 3) |
-| **Reference solution**    | Bluetooth - SoC In-Place OTA DFU | Bluetooth - SoC Application OTA DFU |
-| **Supported devices**     | Supports Series 2 devices only and requires a smaller flash size | Supports Series 2 and Series 3 devices with enough flash to store firmware images in 2 instances |
+---
 
-To add DFU to an existing project:
-- Add the appropriate DFU component to your project using Simplicity Studio’s Software Component browser.
-- Add a post-build step to generate the GBL (Gecko Bootloader) file using Simplicity Studio’s Post Build Editor.
-- Rebuild the project.
-- Flash a compatible bootloader to the device.
+## Build & flash
 
-For more information on bootloaders, see [UG103.6: Bootloader Fundamentals](https://www.silabs.com/documents/public/user-guides/ug103-06-fundamentals-bootloading.pdf) and [UG489: Silicon Labs Gecko Bootloader User's Guide for GSDK 4.0 and Higher](https://www.silabs.com/documents/public/user-guides/ug489-gecko-bootloader-user-guide-gsdk-4.pdf).
+This is a Simplicity Studio project. The easiest route:
 
-## Troubleshooting
+1. Install **Simplicity Studio 5** with the **Simplicity SDK** (Bluetooth).
+2. *File → Open Projects from File System…* and select this folder, or import
+   `breathsense_mg21.slcp`.
+3. Build (the hammer icon), then **Flash** to an EFR32MG21 board (the
+   pre-built image is produced under `cmake_gcc/build/`).
 
-### Programming the Radio Board
+To build from the command line with the bundled GCC toolchain:
 
-Before programming the radio board mounted on the mainboard, make sure the power supply switch is in the AEM position (right side) as shown below.
+```bash
+cd cmake_gcc
+cmake --preset project                  # configure
+cmake --build --preset default_config   # build
+```
 
-![Radio board power supply switch](image/readme_img0.png)
+> Build output in `cmake_gcc/build/` is intentionally excluded from git via
+> `.gitignore`.
 
+---
 
-## Resources
+## Try it
 
-[Bluetooth Documentation](https://docs.silabs.com/bluetooth/latest/)
+1. Flash the firmware to the board.
+2. Open a BLE scanner app (e.g. **Simplicity Connect / EFR Connect**, nRF
+   Connect) and connect to **`BreathSense-Vinh`**.
+3. Enable notifications on the **Breath Event** and **Device Status**
+   characteristics.
+4. Press the button (**PD04**) — you should receive a notification such as
+   `Inhale #1`, then `Exhale #2`, `Cough #3`, and so on.
+5. Optionally write 4 bytes to the **Config** characteristic to change the
+   mode / threshold / sample rate.
 
-[UG103.14: Bluetooth LE Fundamentals](https://www.silabs.com/documents/public/user-guides/ug103-14-fundamentals-ble.pdf)
+---
 
-[QSG169: Bluetooth SDK v3.x Quick Start Guide](https://www.silabs.com/documents/public/quick-start-guides/qsg169-bluetooth-sdk-v3x-quick-start-guide.pdf)
+## License
 
-[UG434: Silicon Labs Bluetooth ® C Application Developer's Guide for SDK v3.x](https://www.silabs.com/documents/public/user-guides/ug434-bluetooth-c-soc-dev-guide-sdk-v3x.pdf)
-
-[Bluetooth Training](https://www.silabs.com/support/training/bluetooth)
-
-## Report Bugs & Get Support
-
-You are always encouraged and welcome to report any issues you found to us via [Silicon Labs Community](https://www.silabs.com/community).
+The Silicon Labs source files in this project are distributed under the
+**Zlib** license (see the header in each source file). Application code added
+on top follows the same terms unless stated otherwise.
