@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ASCII"?>
+<device:XMLDevice xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:device="http://www.silabs.com/ss/hwconfig/document/device.ecore" name="pin_tool.EFR32MG21A010F512IM32" partId="mcu.arm.efr32.mg21.efr32mg21a010f512im32" contextId="com.silabs.sdk.stack.sisdk:2025.12.3._1313778617563987571">
+  <mode name="DefaultMode">
+    <property object="DefaultMode" propertyId="mode.diagramLocation" value="100, 100"/>
+    <property object="PA00" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_SIMPLE_LED_LED_CN%T%sl_simple_led_led_CN_config.h"/>
+    <property object="PA00" propertyId="pin.reserve" value="Reserved"/>
+    <property object="PA04" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_SIMPLE_LED_LED_DISCN%T%sl_simple_led_led_disCN_config.h"/>
+    <property object="PA04" propertyId="pin.reserve" value="Reserved"/>
+    <property object="PD04" propertyId="ABModule.selectedRequirement" value="gpio%T%SL_SIMPLE_BUTTON_BT_01%T%sl_simple_button_bt_01_config.h"/>
+    <property object="PD04" propertyId="pin.reserve" value="Reserved"/>
+    <property object="PTI" propertyId="ABModule.selectedRequirement" value="pti%T%SL_RAIL_UTIL_PTI%T%sl_rail_util_pti_config.h"/>
+    <property object="PTI" propertyId="ABPeripheral.included" value="true"/>
+  </mode>
+  <modeTransition>
+    <property object="RESET &#x2192; DefaultMode" propertyId="modeTransition.source" value="RESET"/>
+    <property object="RESET &#x2192; DefaultMode" propertyId="modeTransition.target" value="DefaultMode"/>
+  </modeTransition>
+</device:XMLDevice>

@@ -1,0 +1,32 @@
+# --- Build output (Simplicity Studio / CMake / GCC) ---
+cmake_gcc/build/
+build/
+**/GNU ARM v*/
+**/*.o
+**/*.obj
+**/*.axf
+**/*.out
+**/*.bin
+**/*.hex
+**/*.s37
+**/*.map
+**/*.crc
+**/*.lst
+
+# Ninja / CMake cache
+**/.ninja_deps
+**/.ninja_log
+**/CMakeCache.txt
+**/CMakeFiles/
+
+# --- IDE / editor temp ---
+.uceditor/
+*.bak
+*.tmp
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- helper script (not part of the project) ---
+push_to_github.bat
