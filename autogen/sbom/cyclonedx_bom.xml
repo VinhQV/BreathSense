@@ -10,7 +10,7 @@ referenced in this SBOM.)
 -->
 <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
   <metadata>
-    <timestamp>2026-06-02T14:17:39Z</timestamp>
+    <timestamp>2026-06-03T17:50:04Z</timestamp>
     <authors>
       <author>
         <name>Silicon Laboratories, Inc.</name>
@@ -125,6 +125,16 @@ referenced in this SBOM.)
             <expression>Zlib AND MSLA</expression>
           </licenses>
         </component>
+        <component bom-ref="silabs.simplicity_sdk:2025.12.3:button" type="library">
+          <name>Generic Button API</name>
+          <version>2025.12.3</version>
+	      <supplier>
+	        <name>Silicon Laboratories, Inc.</name>
+	      </supplier>
+          <licenses>
+            <expression>Zlib</expression>
+          </licenses>
+        </component>
         <component bom-ref="silabs.simplicity_sdk:2025.12.3:clock_manager" type="library">
           <name>Clock Manager</name>
           <version>2025.12.3</version>
@@ -215,6 +225,26 @@ referenced in this SBOM.)
             <expression>Zlib</expression>
           </licenses>
         </component>
+        <component bom-ref="silabs.simplicity_sdk:2025.12.3:simple_button" type="library">
+          <name>Simple Button</name>
+          <version>2025.12.3</version>
+	      <supplier>
+	        <name>Silicon Laboratories, Inc.</name>
+	      </supplier>
+          <licenses>
+            <expression>Zlib</expression>
+          </licenses>
+        </component>
+        <component bom-ref="silabs.simplicity_sdk:2025.12.3:simple_led" type="library">
+          <name>Simple LED</name>
+          <version>2025.12.3</version>
+	      <supplier>
+	        <name>Silicon Laboratories, Inc.</name>
+	      </supplier>
+          <licenses>
+            <expression>Zlib</expression>
+          </licenses>
+        </component>
         <component bom-ref="silabs.simplicity_sdk:2025.12.3:sl_main" type="library">
           <name>System Setup (sl_main)</name>
           <version>2025.12.3</version>
@@ -247,6 +277,16 @@ referenced in this SBOM.)
         </component>
         <component bom-ref="silabs.simplicity_sdk:2025.12.3:device_manager" type="library">
           <name>Device Manager</name>
+          <version>2025.12.3</version>
+	      <supplier>
+	        <name>Silicon Laboratories, Inc.</name>
+	      </supplier>
+          <licenses>
+            <expression>Zlib</expression>
+          </licenses>
+        </component>
+        <component bom-ref="silabs.simplicity_sdk:2025.12.3:led" type="library">
+          <name>Generic LED API</name>
           <version>2025.12.3</version>
 	      <supplier>
 	        <name>Silicon Laboratories, Inc.</name>
@@ -955,6 +995,16 @@ referenced in this SBOM.)
             <expression>MSLA</expression>
           </licenses>
         </component>
+        <component bom-ref="silabs.simplicity_sdk:2025.12.3:simple_led_core" type="library">
+          <name>Simple LED Core</name>
+          <version>2025.12.3</version>
+	      <supplier>
+	        <name>Silicon Laboratories, Inc.</name>
+	      </supplier>
+          <licenses>
+            <expression>Zlib</expression>
+          </licenses>
+        </component>
         <component bom-ref="silabs.simplicity_sdk:2025.12.3:memory_profiler_api" type="library">
           <name>Memory Profiler API</name>
           <version>2025.12.3</version>
@@ -1475,6 +1525,16 @@ referenced in this SBOM.)
             <expression>Zlib</expression>
           </licenses>
         </component>
+        <component bom-ref="silabs.simplicity_sdk:2025.12.3:simple_button_core" type="library">
+          <name>Simple Button Configuration</name>
+          <version>2025.12.3</version>
+	      <supplier>
+	        <name>Silicon Laboratories, Inc.</name>
+	      </supplier>
+          <licenses>
+            <expression>Zlib</expression>
+          </licenses>
+        </component>
         <component bom-ref="silabs.simplicity_sdk:2025.12.3:hal_syscfg" type="library">
           <name>SYSCFG</name>
           <version>2025.12.3</version>
@@ -1597,66 +1657,6 @@ referenced in this SBOM.)
         </component>
         <component bom-ref="silabs.simplicity_sdk:2025.12.3:gpio" type="library">
           <name>GPIO Driver</name>
-          <version>2025.12.3</version>
-	      <supplier>
-	        <name>Silicon Laboratories, Inc.</name>
-	      </supplier>
-          <licenses>
-            <expression>Zlib</expression>
-          </licenses>
-        </component>
-        <component bom-ref="silabs.simplicity_sdk:2025.12.3:button" type="library">
-          <name>Generic Button API</name>
-          <version>2025.12.3</version>
-	      <supplier>
-	        <name>Silicon Laboratories, Inc.</name>
-	      </supplier>
-          <licenses>
-            <expression>Zlib</expression>
-          </licenses>
-        </component>
-        <component bom-ref="silabs.simplicity_sdk:2025.12.3:simple_button" type="library">
-          <name>Simple Button</name>
-          <version>2025.12.3</version>
-	      <supplier>
-	        <name>Silicon Laboratories, Inc.</name>
-	      </supplier>
-          <licenses>
-            <expression>Zlib</expression>
-          </licenses>
-        </component>
-        <component bom-ref="silabs.simplicity_sdk:2025.12.3:simple_button_core" type="library">
-          <name>Simple Button Configuration</name>
-          <version>2025.12.3</version>
-	      <supplier>
-	        <name>Silicon Laboratories, Inc.</name>
-	      </supplier>
-          <licenses>
-            <expression>Zlib</expression>
-          </licenses>
-        </component>
-        <component bom-ref="silabs.simplicity_sdk:2025.12.3:simple_led" type="library">
-          <name>Simple LED</name>
-          <version>2025.12.3</version>
-	      <supplier>
-	        <name>Silicon Laboratories, Inc.</name>
-	      </supplier>
-          <licenses>
-            <expression>Zlib</expression>
-          </licenses>
-        </component>
-        <component bom-ref="silabs.simplicity_sdk:2025.12.3:led" type="library">
-          <name>Generic LED API</name>
-          <version>2025.12.3</version>
-	      <supplier>
-	        <name>Silicon Laboratories, Inc.</name>
-	      </supplier>
-          <licenses>
-            <expression>Zlib</expression>
-          </licenses>
-        </component>
-        <component bom-ref="silabs.simplicity_sdk:2025.12.3:simple_led_core" type="library">
-          <name>Simple LED Core</name>
           <version>2025.12.3</version>
 	      <supplier>
 	        <name>Silicon Laboratories, Inc.</name>

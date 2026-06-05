@@ -13,7 +13,7 @@ DocumentNamespace: https://silabs.com
 
 ## Creation Information
 Creator: Organization: Silicon Laboratories, Inc.
-Created: 2026-06-02T14:17:39Z
+Created: 2026-06-03T17:50:04Z
 ## Relationships
 Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-silabs.simplicity_sdk-2025.12.3
 
@@ -35,6 +35,7 @@ Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.si
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-bluetooth_feature_sm
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-bluetooth_feature_system
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-bluetooth_stack
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-button
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-clock_manager
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-device_init
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-freertos
@@ -42,10 +43,13 @@ Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.si
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-gatt_service_device_information_override
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-mpu
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-rail_util_pti
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-sl_main
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-bgapi_protocol_rtos_adaptation
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-power_manager
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-device_manager
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-led
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-sl_rail_util_pti
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-bit
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-psa_driver_common
@@ -112,6 +116,7 @@ Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.si
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-se_manager_config
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-power_manager_handler_implementation
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-bluetooth_common_libraries_release
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led_core
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-memory_profiler_api
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-device_dma_hal
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-power_manager_core
@@ -160,6 +165,7 @@ Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.si
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-bluetooth_controller_crypto
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-emlib_common
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-sl_core
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button_core
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-hal_syscfg
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-cmsis_core
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-emlib_core
@@ -171,12 +177,6 @@ Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.si
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-sl_main_init
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-sl_main_process_action
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-gpio
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-button
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button_core
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-led
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3 CONTAINS SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led_core
 
 ## Package Information
 PackageName: EFR32MG21A010F512IM32
@@ -289,6 +289,17 @@ PackageLicenseConcluded: Zlib AND MSLA
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-bluetooth_stack CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
 
 ## Package Information
+PackageName: Generic Button API
+SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-button
+PackageVersion: 2025.12.3
+PrimaryPackagePurpose: LIBRARY
+PackageDownloadLocation: NOASSERTION
+PackageSupplier: Organization: Silicon Laboratories, Inc.
+PackageLicenseConcluded: Zlib
+## Relationships
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-button CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
+
+## Package Information
 PackageName: Clock Manager
 SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-clock_manager
 PackageVersion: 2025.12.3
@@ -381,6 +392,28 @@ PackageLicenseConcluded: Zlib
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-rail_util_pti CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
 
 ## Package Information
+PackageName: Simple Button
+SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button
+PackageVersion: 2025.12.3
+PrimaryPackagePurpose: LIBRARY
+PackageDownloadLocation: NOASSERTION
+PackageSupplier: Organization: Silicon Laboratories, Inc.
+PackageLicenseConcluded: Zlib
+## Relationships
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
+
+## Package Information
+PackageName: Simple LED
+SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led
+PackageVersion: 2025.12.3
+PrimaryPackagePurpose: LIBRARY
+PackageDownloadLocation: NOASSERTION
+PackageSupplier: Organization: Silicon Laboratories, Inc.
+PackageLicenseConcluded: Zlib
+## Relationships
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
+
+## Package Information
 PackageName: System Setup (sl_main)
 SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-sl_main
 PackageVersion: 2025.12.3
@@ -423,6 +456,17 @@ PackageSupplier: Organization: Silicon Laboratories, Inc.
 PackageLicenseConcluded: Zlib
 ## Relationships
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-device_manager CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
+
+## Package Information
+PackageName: Generic LED API
+SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-led
+PackageVersion: 2025.12.3
+PrimaryPackagePurpose: LIBRARY
+PackageDownloadLocation: NOASSERTION
+PackageSupplier: Organization: Silicon Laboratories, Inc.
+PackageLicenseConcluded: Zlib
+## Relationships
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-led CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
 
 ## Package Information
 PackageName: RAIL Utility, PTI (RAIL 3)
@@ -1181,6 +1225,17 @@ PackageLicenseConcluded: MSLA
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-bluetooth_common_libraries_release CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
 
 ## Package Information
+PackageName: Simple LED Core
+SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led_core
+PackageVersion: 2025.12.3
+PrimaryPackagePurpose: LIBRARY
+PackageDownloadLocation: NOASSERTION
+PackageSupplier: Organization: Silicon Laboratories, Inc.
+PackageLicenseConcluded: Zlib
+## Relationships
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led_core CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
+
+## Package Information
 PackageName: Memory Profiler API
 SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-memory_profiler_api
 PackageVersion: 2025.12.3
@@ -1739,6 +1794,17 @@ PackageLicenseConcluded: Zlib
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-sl_core CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
 
 ## Package Information
+PackageName: Simple Button Configuration
+SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button_core
+PackageVersion: 2025.12.3
+PrimaryPackagePurpose: LIBRARY
+PackageDownloadLocation: NOASSERTION
+PackageSupplier: Organization: Silicon Laboratories, Inc.
+PackageLicenseConcluded: Zlib
+## Relationships
+Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button_core CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
+
+## Package Information
 PackageName: SYSCFG
 SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-hal_syscfg
 PackageVersion: 2025.12.3
@@ -1873,69 +1939,3 @@ PackageSupplier: Organization: Silicon Laboratories, Inc.
 PackageLicenseConcluded: Zlib
 ## Relationships
 Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-gpio CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
-
-## Package Information
-PackageName: Generic Button API
-SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-button
-PackageVersion: 2025.12.3
-PrimaryPackagePurpose: LIBRARY
-PackageDownloadLocation: NOASSERTION
-PackageSupplier: Organization: Silicon Laboratories, Inc.
-PackageLicenseConcluded: Zlib
-## Relationships
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-button CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
-
-## Package Information
-PackageName: Simple Button
-SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button
-PackageVersion: 2025.12.3
-PrimaryPackagePurpose: LIBRARY
-PackageDownloadLocation: NOASSERTION
-PackageSupplier: Organization: Silicon Laboratories, Inc.
-PackageLicenseConcluded: Zlib
-## Relationships
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
-
-## Package Information
-PackageName: Simple Button Configuration
-SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button_core
-PackageVersion: 2025.12.3
-PrimaryPackagePurpose: LIBRARY
-PackageDownloadLocation: NOASSERTION
-PackageSupplier: Organization: Silicon Laboratories, Inc.
-PackageLicenseConcluded: Zlib
-## Relationships
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_button_core CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
-
-## Package Information
-PackageName: Simple LED
-SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led
-PackageVersion: 2025.12.3
-PrimaryPackagePurpose: LIBRARY
-PackageDownloadLocation: NOASSERTION
-PackageSupplier: Organization: Silicon Laboratories, Inc.
-PackageLicenseConcluded: Zlib
-## Relationships
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
-
-## Package Information
-PackageName: Generic LED API
-SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-led
-PackageVersion: 2025.12.3
-PrimaryPackagePurpose: LIBRARY
-PackageDownloadLocation: NOASSERTION
-PackageSupplier: Organization: Silicon Laboratories, Inc.
-PackageLicenseConcluded: Zlib
-## Relationships
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-led CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3
-
-## Package Information
-PackageName: Simple LED Core
-SPDXID: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led_core
-PackageVersion: 2025.12.3
-PrimaryPackagePurpose: LIBRARY
-PackageDownloadLocation: NOASSERTION
-PackageSupplier: Organization: Silicon Laboratories, Inc.
-PackageLicenseConcluded: Zlib
-## Relationships
-Relationship: SPDXRef-silabs.simplicity_sdk-2025.12.3-simple_led_core CONTAINED_BY SPDXRef-silabs.simplicity_sdk-2025.12.3

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "em_common.h"
 #include "app_assert.h"
 #include "sl_bluetooth.h"
@@ -8,20 +9,33 @@
 #include "sl_simple_button_instances.h"
 #include "sl_simple_led_instances.h"
 
-// Include FreeRTOS to use Semaphore
+// Thu vien FreeRTOS
 #include "FreeRTOS.h"
 #include "semphr.h"
 
-// Extern the Semaphore handle from app_freertos.c
+// Extern Semaphore tu file app_freertos.c de dung chung
 extern SemaphoreHandle_t breath_event_sem;
 
-// Struct definitions
+
+static int today_coughs = 0;
+static int current_day = 1;
+
+static float alpha = 0.2f;
+static float alarm_threshold_pct = 0.4f;
+static float min_buffer_coughs = 5.0f;
+
+static float baseline = 0.0f;
+static bool is_first_day = true;
+
+// Bien luu tru trang thai ngat tu nut bam
 typedef enum {
-  BREATH_INHALE  = 0x01, 
-  BREATH_EXHALE  = 0x02,
-  BREATH_COUGH   = 0x03, 
-  BREATH_UNKNOWN = 0xFF
-} breath_event_type_t;
+  EVENT_NONE = 0,
+  EVENT_COUGH_DETECTED, // Bam Nut 0
+  EVENT_END_OF_DAY      // Bam Nut 1
+} isr_event_t;
+
+volatile isr_event_t current_isr_event = EVENT_NONE;
+
 
 typedef struct __attribute__((packed)) {
   uint8_t mode, threshold, sample_rate, reserved;
@@ -35,7 +49,6 @@ typedef struct __attribute__((packed)) {
 
 static uint8_t advertising_set_handle = 0xff;
 static uint8_t connection_handle = 0xff;
-static uint32_t breath_count = 0;
 static breath_config_t cfg = { 1, 128, 16, 0 };
 static device_status_t sts = { 1, 95, 0, 0 };
 static bool is_subscribed = false;
@@ -50,74 +63,128 @@ static inline void led_show_connected(void) {
   sl_led_turn_on(&sl_led_led_cn);
 }
 
-// BUTTON INTERRUPT HANDLER (INTERRUPT CONTEXT)
+void app_init(void) { 
+  app_init_bt();
+}
+
+void app_process_action(void) {}
+
+// =============================================================================
+// XU LY NGAT PHAN CUNG 
+// ============================================================================= 
 void sl_button_on_change(const sl_button_t *handle) {
-  if (handle == &sl_button_bt_01 && sl_button_get_state(handle) == SL_SIMPLE_BUTTON_PRESSED) {
+  if (sl_button_get_state(handle) == SL_SIMPLE_BUTTON_PRESSED) {
       
-      // Since this is inside an interrupt, we MUST use FreeRTOS FromISR APIs
+      // Gan gia tri su kien de Task xu ly
+      if (handle == &sl_button_btn0) {
+          current_isr_event = EVENT_COUGH_DETECTED; 
+      } else if (handle == &sl_button_btn1) {
+          current_isr_event = EVENT_END_OF_DAY;     
+      }
+
+      // Kich hoat Semaphore de danh thuc FreeRTOS Task
       BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-      
       if (breath_event_sem != NULL) {
           xSemaphoreGiveFromISR(breath_event_sem, &xHigherPriorityTaskWoken);
       }
-      
-      // Force a context switch immediately if the woken task has a higher priority
       portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
   }
 }
 
-void app_init(void) {}
-
-void app_process_action(void) {}
-
-// this function will be called from a FreeRTOS when button is pressed
+// =============================================================================
+// HAM THUC THI CHINH CUA FREERTOS TASK 
+// =============================================================================
 void app_send_breath_data_task_cb(void) {
-    if (connection_handle != 0xff && is_subscribed) {
-      breath_event_type_t type = (breath_event_type_t)((breath_count % 3) + 1);
-      breath_count++;
-      sts.event_count = breath_count;
+    isr_event_t evt = current_isr_event;
+    current_isr_event = EVENT_NONE;
 
-      const char *type_str;
-      switch (type) {
-        case BREATH_INHALE: type_str = "Inhale"; break;
-        case BREATH_EXHALE: type_str = "Exhale"; break;
-        case BREATH_COUGH:  type_str = "Cough";  break;
-        default:            type_str = "Unknown"; break;
-      }
+    char msg[32];
+    int len = 0;
 
-      char msg[32];
-      int len = snprintf(msg, sizeof(msg), "%s #%lu", type_str, (unsigned long)breath_count);
+    // Detect coughs
+    if (evt == EVENT_COUGH_DETECTED) {
+        today_coughs++;
+    //    printf("[MIC GIA LAP] Phat hien 1 tieng ho! (Tong hom nay: %d)\n", today_coughs);
 
-      sl_bt_gatt_server_send_notification(
-          connection_handle, gattdb_breath_event, (uint8_t)len, (uint8_t *)msg);
+        if (connection_handle != 0xff && is_subscribed) {
+            len = snprintf(msg, sizeof(msg), "Cough #%d", today_coughs);
+            // LINH GAC 1
+            if (len > 0 && len < 32) {
+                sl_bt_gatt_server_send_notification(
+                    connection_handle, gattdb_breath_event, (uint8_t)len, (uint8_t *)msg);
+            }
+        }
+    } 
+    // Bam Nut 1  -> End Day
+    else if (evt == EVENT_END_OF_DAY) {
+        printf("\n--- TONG KET NGAY %d ---\n", current_day);
+        printf("Tong so tieng ho: %d\n", today_coughs);
 
-      sl_bt_gatt_server_send_notification(
-          connection_handle, gattdb_breath_status, sizeof(sts), (uint8_t *)&sts);
+        if (is_first_day) {
+            baseline = (float)today_coughs;
+            is_first_day = false;
+            printf("  -> [Khoi tao] Muc nen goc ghim o: %.2f\n", baseline);
+        } else {
+            float allowed_increase = baseline * alarm_threshold_pct;
+            if (allowed_increase < min_buffer_coughs) {
+                allowed_increase = min_buffer_coughs;
+            }
+            float max_allowed = baseline + allowed_increase;
+
+            if ((float)today_coughs > max_allowed) {
+    //            printf("  -> [CANH BAO DO] Bat thuong! (Vuot nguong: %.1f)\n", max_allowed);
+                
+                if (connection_handle != 0xff && is_subscribed) {
+                    len = snprintf(msg, sizeof(msg), "Warning #%d", today_coughs);
+                    //gui len server
+                    if (len > 0 && len < 32) {
+                        sl_bt_gatt_server_send_notification(
+                            connection_handle, gattdb_breath_event, (uint8_t)len, (uint8_t *)msg);
+                    }
+                }
+            } else {
+    //            printf("  -> Trang thai on dinh.\n");
+            }
+
+            baseline = (alpha * today_coughs) + ((1.0f - alpha) * baseline);
+            printf("  -> Muc nen EWMA moi cho ngay mai: %.2f\n", baseline);
+        }
+
+        if (connection_handle != 0xff && is_subscribed) {
+            len = snprintf(msg, sizeof(msg), "DayEnd B:%d", (int)baseline);
+            // Chong tran bo dem
+            if (len > 0 && len < 32) {
+                sl_bt_gatt_server_send_notification(
+                    connection_handle, gattdb_breath_event, (uint8_t)len, (uint8_t *)msg);
+            } else {
+         //       printf("[LOI FIRMWARE] snprintf tinh toan sai length, chan khong gui BLE!\n");
+            }
+        }
+
+        printf("==================================================\n\n");
+        current_day++;
+        today_coughs = 0; 
     }
 }
-
+// =============================================================================
+// CAU HINH CAC SU KIEN CUA BLUETOOTH
+// =============================================================================
 void sl_bt_on_event(sl_bt_msg_t *evt) {
   sl_status_t sc;
   
   switch (SL_BT_MSG_ID(evt->header)) {
     case sl_bt_evt_system_boot_id: {
       uint8_t name[] = "BreathSense-Vinh";
-      sc = sl_bt_gatt_server_write_attribute_value(
-          gattdb_device_name, 0, sizeof(name) - 1, name);
+      sc = sl_bt_gatt_server_write_attribute_value(gattdb_device_name, 0, sizeof(name) - 1, name);
       app_assert_status(sc);
       
       sc = sl_bt_advertiser_create_set(&advertising_set_handle);
       app_assert_status(sc);
-      
-      sc = sl_bt_legacy_advertiser_generate_data(
-          advertising_set_handle, sl_bt_advertiser_general_discoverable);
+      sc = sl_bt_legacy_advertiser_generate_data(advertising_set_handle, sl_bt_advertiser_general_discoverable);
       app_assert_status(sc);
-      
       sc = sl_bt_advertiser_set_timing(advertising_set_handle, 160, 160, 0, 0);
       app_assert_status(sc);
-      
-      sc = sl_bt_legacy_advertiser_start(
-          advertising_set_handle, sl_bt_legacy_advertiser_connectable);
+      sc = sl_bt_legacy_advertiser_start(advertising_set_handle, sl_bt_legacy_advertiser_connectable);
       app_assert_status(sc);
       
       led_show_disconnected();
@@ -131,14 +198,11 @@ void sl_bt_on_event(sl_bt_msg_t *evt) {
       
     case sl_bt_evt_connection_closed_id:
       connection_handle = 0xff;
-      is_subscribed = false; // Reset the subscribe status when connection is lost
+      is_subscribed = false; 
       
-      sc = sl_bt_legacy_advertiser_generate_data(
-          advertising_set_handle, sl_bt_advertiser_general_discoverable);
+      sc = sl_bt_legacy_advertiser_generate_data(advertising_set_handle, sl_bt_advertiser_general_discoverable);
       app_assert_status(sc);
-      
-      sc = sl_bt_legacy_advertiser_start(
-          advertising_set_handle, sl_bt_legacy_advertiser_connectable);
+      sc = sl_bt_legacy_advertiser_start(advertising_set_handle, sl_bt_legacy_advertiser_connectable);
       app_assert_status(sc);
       
       led_show_disconnected();
@@ -147,11 +211,10 @@ void sl_bt_on_event(sl_bt_msg_t *evt) {
     case sl_bt_evt_gatt_server_characteristic_status_id: {
       if (evt->data.evt_gatt_server_characteristic_status.status_flags == sl_bt_gatt_server_client_config) {
         uint16_t flags = evt->data.evt_gatt_server_characteristic_status.client_config_flags;
-        
         if (flags & sl_bt_gatt_server_notification) {
-          is_subscribed = true;  // Client has enabled Notify
+          is_subscribed = true;  
         } else {
-          is_subscribed = false; // Client has disabled Notify
+          is_subscribed = false; 
         }
       }
       break;
@@ -162,19 +225,9 @@ void sl_bt_on_event(sl_bt_msg_t *evt) {
       uint8_t conn = evt->data.evt_gatt_server_user_read_request.connection;
       
       if (att == gattdb_breath_config) {
-        sl_bt_gatt_server_send_user_read_response(
-            conn, att, 0, sizeof(cfg), (uint8_t *)&cfg, NULL);
+        sl_bt_gatt_server_send_user_read_response(conn, att, 0, sizeof(cfg), (uint8_t *)&cfg, NULL);
       } else if (att == gattdb_breath_status) {
-        sl_bt_gatt_server_send_user_read_response(
-            conn, att, 0, sizeof(sts), (uint8_t *)&sts, NULL);
-      } else if (att == gattdb_breath_event) {
-        uint8_t snap[5] = {
-          BREATH_UNKNOWN,
-          (uint8_t)(breath_count), (uint8_t)(breath_count >> 8),
-          (uint8_t)(breath_count >> 16), (uint8_t)(breath_count >> 24)
-        };
-        sl_bt_gatt_server_send_user_read_response(
-            conn, att, 0, sizeof(snap), snap, NULL);
+        sl_bt_gatt_server_send_user_read_response(conn, att, 0, sizeof(sts), (uint8_t *)&sts, NULL);
       }
       break;
     }
@@ -189,8 +242,7 @@ void sl_bt_on_event(sl_bt_msg_t *evt) {
         memcpy(&cfg, data, sizeof(cfg));
         sl_bt_gatt_server_send_user_write_response(conn, att, SL_STATUS_OK);
       } else {
-        sl_bt_gatt_server_send_user_write_response(
-            conn, att, SL_STATUS_INVALID_PARAMETER);
+        sl_bt_gatt_server_send_user_write_response(conn, att, SL_STATUS_INVALID_PARAMETER);
       }
       break;
     }
